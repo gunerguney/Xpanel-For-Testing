@@ -6,7 +6,7 @@ from struct import*
 class Model:
 
     def __init__(self):
-        self.ip_of_master = "192.168.89.1"
+        self.ip_of_master = "192.168.1.101"
         comm.ip_of_master = self.ip_of_master
 
     def set_ip(self,input_ip):
@@ -48,7 +48,7 @@ class Model:
         print "Button3 pressed"
 
         airport = "LTBA"
-        type_start = 13
+        type_start = 11
         local_rwy_ramp = 2
         backwards = 1
 
