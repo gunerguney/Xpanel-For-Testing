@@ -90,6 +90,29 @@ def send_fail(equipment):
 
     sock2.sendto(message, (UDP_IP, UDP_PORT))
 
+def send_vehn(aircraft,order):
+    UDP_IP = ip_of_master
+    UDP_PORT = 49000
+
+    param = pack('i',17)
+
+    header = "VEHN0" + param
+
+    aircraft = aircraft.ljust(150,'\0')
+
+    weapon = ""
+    weapon = weapon.ljust(960,'\0')
+
+    message = header + "0" + aircraft + weapon
+
+    print len(message)
+
+    sock2 = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+
+    sock2.sendto(message, (UDP_IP, UDP_PORT))
+
+
+
 
 
 

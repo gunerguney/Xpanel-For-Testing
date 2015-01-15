@@ -6,7 +6,7 @@ from struct import*
 class Model:
 
     def __init__(self):
-        self.ip_of_master = "192.168.1.25"
+        self.ip_of_master = "192.168.89.1"
         comm.ip_of_master = self.ip_of_master
 
     def set_ip(self,input_ip):
@@ -71,3 +71,14 @@ class Model:
         seriesOfDataIO = 11  #means from 0 to 10
 
         comm.send_dsel(seriesOfDataIO)
+
+    def btn6_callback(self):
+        print "Button6 pressed"
+
+        user_aircraft = 0;
+
+        order = pack('i',user_aircraft)
+        aircraft = "Aircraft/Gliders/ASK21/ASK21.acf"
+
+        comm.send_vehn(aircraft,order)
+
