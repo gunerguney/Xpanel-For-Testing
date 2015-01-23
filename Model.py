@@ -82,3 +82,8 @@ class Model:
 
         comm.send_vehn(aircraft,order)
 
+    def btn7_callback(self):
+        print "Button6 pressed"
+
+        comm.start_reading()
+

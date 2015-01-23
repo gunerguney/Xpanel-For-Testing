@@ -94,6 +94,8 @@ class View:
 
         self.button_6 = LeftMenuButton(go_panel, "Button #6", model.btn6_callback)
 
+        self.button_7 = LeftMenuButton(go_panel, "Button #7", model.btn7_callback)
+
         #end of left menu for training buttons
 
 
