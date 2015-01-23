@@ -131,7 +131,6 @@ def start_reading():
 
     while True:
         data = sock3.recv(BUFFER_SIZE)
-        print len(data)
         parseUDPData(data)
 
 def parseUDPData(message):
@@ -145,8 +144,6 @@ def parseUDPData(message):
     sizeOfEachGroup = 36
 
     header = message[0:sizeOfHeader]
-
-    print header
 
     listOfGroup = []
 
@@ -178,19 +175,15 @@ def parseUDPData(message):
         group = {}
         order = 0
 
-        print i
-
         for j in range(0,sizeOfEachGroup,sizeOfEachData):
 
             if j == 0:
                 group['index'] = unpack('i',part[j:j+sizeOfEachData])
             else:
-                group[str(order) + "data"] = unpack('f',part[j:j+sizeOfEachData])
+                group[order] = unpack('f',part[j:j+sizeOfEachData])
                 order += 1
 
         listOfGroup.append(group)
-
-
 
 
     print "All Group was Received"
