@@ -45,15 +45,19 @@ def send_dref(dref,param):
     sock2.sendto(message, (UDP_IP, UDP_PORT))
     print str(bytes(message)) + " sent"
 
-def send_papt(param1,param2,param3,param4):
+def send_papt(airport,type_start,local_rwy_ramp,backwards):
     UDP_IP = ip_of_master
     UDP_PORT = 49000
 
+    type_start      =  pack('i',type_start)
+    local_rwy_ramp  =  pack('i',local_rwy_ramp)
+    backwards       =  pack('i',backwards)
+
     header = "PAPT\0"
 
-    airport = param1 + "\0\0\0\0"
+    airport = airport + "\0\0\0\0"
 
-    message = header + airport + param2 + param3 + param4
+    message = header + airport + type_start + local_rwy_ramp + backwards
 
     print message
 

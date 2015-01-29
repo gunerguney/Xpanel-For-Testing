@@ -57,12 +57,7 @@ class Model:
         #12 APPROACH 3 nm
         #13 APPROACH 10 nm
 
-
-        param1I =  pack('i',type_start)
-        param2I =  pack('i',local_rwy_ramp)
-        param3I =  pack('i',backwards)
-
-        comm.send_papt(airport,param1I,param2I,param3I)
+        comm.send_papt(airport,type_start,local_rwy_ramp,backwards)
 
     def btn4_callback(self):
         print "Button4 pressed"
