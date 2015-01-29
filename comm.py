@@ -1,14 +1,15 @@
-from wx.lib.wxpTag import _param2dict
-
 __author__ = 'cal02'
 
 import socket
 from struct import*
 from threading import *
+from time import *
 
-dataFromSim = {}
 
 global ip_of_master
+
+ip_of_master = "192.168.1.101"
+
 
 def send_command(message):
     UDP_IP = ip_of_master
@@ -115,79 +116,90 @@ def send_vehn(aircraft,order):
     sock2.sendto(message, (UDP_IP, UDP_PORT))
 
 
-#for receive data output indexes and data
-def receive_data():
 
-    t = Thread(target= start_reading)
-    t.start()
+class Read():
 
-def start_reading():
-    UDP_IP = "127.0.0.1"
-    UDP_PORT = 49007
-    BUFFER_SIZE = 4793      #133*36 + 5 = numberOfGroup * sizeOfEachGroup + sizeOfHeader
+    dataFromSim = []
 
-    sock3 = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    sock3.bind((UDP_IP, UDP_PORT))
+    #for receive data output indexes and data
+    def receive_data(self):
+        t = Thread(target= self.start_reading)
+        t.start()
 
-    while True:
-        data = sock3.recv(BUFFER_SIZE)
-        parseUDPData(data)
+    def start_reading(self):
+        UDP_IP = "192.168.1.102"
+        UDP_PORT = 49007
+        BUFFER_SIZE = 4793      #133*36 + 5 = numberOfGroup * sizeOfEachGroup + sizeOfHeader
 
-def parseUDPData(message):
+        sock3 = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        sock3.bind((UDP_IP, UDP_PORT))
 
-    global elevator
+        while True:
+            data = sock3.recv(BUFFER_SIZE)
 
-    sizeOfHeader = 5
-    sizeOfEachData = 4
-    numberOfDataInGroup = 8
-    numberOfGroup = 133
-    sizeOfEachGroup = 36
-
-    header = message[0:sizeOfHeader]
-
-    listOfGroup = []
-
-    #0-5 header
-    #5-41 1st group
-    #41-77 2nd group
-    #77-113 3rd group
-    #113-149 4th group
-    #149-185 5th group
-    #185-221 6th group
-    #221-257 7th group
+            self.parseUDPData(data)
 
 
-    #0-4 index
-    #4-8 1st
-    #8-12 2nd
-    #12-16 3rd
-    #16-20 4th
-    #20-24 5th
-    #24-28 6th
-    #28-32 7th
-    #32-36 8th
 
 
-    for i in range(sizeOfHeader,sizeOfEachGroup*numberOfGroup,sizeOfEachGroup):
+    def parseUDPData(self,message):
 
-        part = message[i:i+sizeOfEachGroup]
+        sizeOfHeader = 5
+        sizeOfEachData = 4
+        numberOfDataInGroup = 8
+        numberOfGroup = 133
+        sizeOfEachGroup = 36
 
-        group = {}
-        order = 0
+        header = message[0:sizeOfHeader]
 
-        for j in range(0,sizeOfEachGroup,sizeOfEachData):
+        self.listOfGroup = []
 
-            if j == 0:
-                group['index'] = unpack('i',part[j:j+sizeOfEachData])
-            else:
-                group[order] = unpack('f',part[j:j+sizeOfEachData])
-                order += 1
+        #0-5 header
+        #5-41 1st group
+        #41-77 2nd group
+        #77-113 3rd group
+        #113-149 4th group
+        #149-185 5th group
+        #185-221 6th group
+        #221-257 7th group
 
-        listOfGroup.append(group)
+        #0-4 index
+        #4-8 1st
+        #8-12 2nd
+        #12-16 3rd
+        #16-20 4th
+        #20-24 5th
+        #24-28 6th
+        #28-32 7th
+        #32-36 8th
+
+        for i in range(sizeOfHeader,sizeOfEachGroup*numberOfGroup,sizeOfEachGroup):
+
+            part = message[i:i+sizeOfEachGroup]
+
+            group = {}
+            order = 0
+
+            for j in range(0,sizeOfEachGroup,sizeOfEachData):
+
+                if j == 0:
+                    group['index'] = unpack('i',part[j:j+sizeOfEachData])[0]
+                else:
+                    group[order] = unpack('f',part[j:j+sizeOfEachData])[0]
+                    order += 1
+
+            self.listOfGroup.append(group)
+
+        self.dataFromSim = self.listOfGroup
+        print "All Group was Received"
 
 
-    print "All Group was Received"
+    def getData(self,index1,index2):
 
+        try:
+            return self.dataFromSim[index1][index2]
+        except IndexError:
+            return 0
 
 
 
