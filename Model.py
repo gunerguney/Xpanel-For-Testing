@@ -37,11 +37,12 @@ class Model:
     def btn2_callback(self):
         print "Button2 pressed"
 
-        param = 11250
-        paramF = pack('f',param)
+        param = 10920
+        #paramF = pack('f',param)
 
-        dref = "sim/cockpit2/radios/actuators/nav1_frequency_hz[0]"
-        comm.send_dref(dref, paramF)
+        #dref = "sim/operation/failures/rel_engfai0"
+        dref ="sim/cockpit2/radios/actuators/nav1_frequency_hz[0]"
+        comm.send_dref(dref, param)
 
 
     def btn3_callback(self):

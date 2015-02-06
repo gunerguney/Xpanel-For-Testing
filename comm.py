@@ -28,15 +28,19 @@ def send_dref(dref,param):
 
     header = "DREF0"
 
+    param = pack('f',param)
+
+    term = pack('b',0)
+
     valOfDref = bytearray([ord(param[0]),ord(param[1]),ord(param[2]),ord(param[3])])
     #valOfDref = bytearray([0,160,42,70])
 
-    lenOfBlank = 509-len(header)-len(valOfDref)-len(dref)
+    lenOfBlank = 509-len(header)-len(valOfDref)-len(dref)-len(term)
 
     filler = ""
     filler = filler.ljust(lenOfBlank)
 
-    message = header + valOfDref + dref + filler
+    message = header + valOfDref + dref + term +filler
 
     print message
 
