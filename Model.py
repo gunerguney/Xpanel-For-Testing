@@ -5,8 +5,10 @@ from struct import*
 
 class Model:
 
+    counter = 0
+
     def __init__(self):
-        self.ip_of_master = "192.168.1.23"
+        self.ip_of_master = "127.0.0.1"
         comm.ip_of_master = self.ip_of_master
 
     def set_ip(self,input_ip):
@@ -37,20 +39,27 @@ class Model:
     def btn2_callback(self):
         print "Button2 pressed"
 
-        param = 10920
+        '''param1 = 0
+        param2 = 0
         #paramF = pack('f',param)
 
         #dref = "sim/operation/failures/rel_engfai0"
-        dref ="sim/cockpit2/radios/actuators/nav1_frequency_hz[0]"
-        comm.send_dref(dref, param)
+        #dref ="sim/operation/failures/failures[1]"
+        dref1 = "sim/flightmodel/position/local_z"
+        dref2 = "sim/flightmodel/position/local_x"
+
+        comm.send_dref(dref1, param1)
+        comm.send_dref(dref2, param2)'''
+
+        comm.request_dref()
 
 
     def btn3_callback(self):
         print "Button3 pressed"
 
-        airport = "LTBA"
-        type_start = 13
-        local_rwy_ramp = 0
+        airport = "KLAX"
+        type_start = 10
+        local_rwy_ramp = self.counter
         backwards = 0
 
         #10 RAMP
@@ -59,6 +68,8 @@ class Model:
         #13 APPROACH 10 nm
 
         comm.send_papt(airport,type_start,local_rwy_ramp,backwards)
+
+        self.counter += 1
 
     def btn4_callback(self):
         print "Button4 pressed"

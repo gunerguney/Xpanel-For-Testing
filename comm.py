@@ -8,7 +8,7 @@ from time import *
 
 global ip_of_master
 
-ip_of_master = "192.168.1.101"
+ip_of_master = "127.0.0.1"
 
 
 def send_command(message):
@@ -42,7 +42,7 @@ def send_dref(dref,param):
 
     message = header + valOfDref + dref + term +filler
 
-    print message
+    #print message
 
     sock2 = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 
@@ -86,6 +86,35 @@ def send_dsel(numOfGroup):
 
     sock2.sendto(message, (UDP_IP, UDP_PORT))
     print str(bytes(message)) + " sent"
+
+def request_dref():
+
+    UDP_IP = ip_of_master
+    UDP_PORT = 49000
+
+    header = "RREF\0"
+
+    frequency = 20
+    index = 1
+
+    frequency = pack('i',frequency)
+    index = pack('i',index)
+
+
+    drefString = "sim/flightmodel/position/indicated_airspeed"
+
+    lenOfBlank = 400-len(drefString)
+
+    filler = "0"
+    filler = filler.ljust(lenOfBlank)
+
+    message = header  + frequency + index + drefString + filler
+
+    sock2 = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+
+    sock2.sendto(message, (UDP_IP, UDP_PORT))
+    print str(bytes(message)) + " sent"
+
 
 
 def send_fail(equipment):
@@ -135,7 +164,7 @@ class Read():
         t.start()
 
     def start_reading(self):
-        UDP_IP = "192.168.1.102"
+        UDP_IP = "127.0.0.1"
         UDP_PORT = 49007
         BUFFER_SIZE = 4793      #133*36 + 5 = numberOfGroup * sizeOfEachGroup + sizeOfHeader
 
@@ -145,10 +174,19 @@ class Read():
         while True:
             data = sock3.recv(BUFFER_SIZE)
 
-            self.parseUDPData(data)
+            print data
+            self.parseRRefData(data)
 
+            #self.parseUDPData(data)
 
+    def parseRRefData(self,message):
 
+        sizeOfHeader = 5
+        header = message[0:sizeOfHeader]
+
+        #msg = unpack('i',message[5:7])
+
+        print "Header: "+header
 
     def parseUDPData(self,message):
 
@@ -200,6 +238,7 @@ class Read():
 
         self.dataFromSim = self.listOfGroup
         print "All Group was Received"
+        print self.dataFromSim
 
 
     def getData(self,index1,index2):

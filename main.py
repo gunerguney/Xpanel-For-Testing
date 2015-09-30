@@ -3,6 +3,7 @@ __author__ = 'cal02'
 from Tkinter import *
 from View import *
 from Model import *
+import comm
 
 class Xpanel(Frame):
 
@@ -18,6 +19,11 @@ class Xpanel(Frame):
         model = Model()
         view = View(self.parent,model)
 
+        reading = comm.Read()
+        reading.receive_data()
+
+
+
     def onExit(self):
         self.quit()
 
@@ -25,7 +31,7 @@ class Xpanel(Frame):
 def main():
 
     root = Tk()
-    root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+    root.geometry("{0}x{1}+0+0".format(600, 400))
     app = Xpanel(root)
     root.mainloop()
 
